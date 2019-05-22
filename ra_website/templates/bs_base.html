@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{# https://docs.djangoproject.com/en/2.2/ref/templates/builtins/ #}
+
+{% block css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+{% endblock css %}
+
+{% block body %}
+    <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+    {% block navbar %}
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="/">{{ title|default:'RA Website' }}</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar" aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="topNavbar">
+        <ul class="navbar-nav mr-auto">
+        {% block nav_left%}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#"
+                id="viewDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                    View<span class="caret"></span>
+                </a>
+            <div class="dropdown-menu" aria-labelledby="viewDropdown">
+                <a class="dropdown-item" href="{% url 'html_checker:index' %}">Full Verified Sample</a>
+            </div>
+          </li>
+          <li class="dropdown">
+            <a class="nav-link dropdown-toggle" href="#"
+                id="downloadDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                    Up/Download<span class="caret"></span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="downloadDropdown">
+                <a class="dropdown-item" href="{% url 'html_checker:upload' %}">Upload Sample</a>
+                <a class="dropdown-item" href="{% url 'html_checker:download' %}">Download Sample</a>
+            </ul>
+          </li>
+        {% endblock nav_left%}
+        </ul>
+
+        {% if user.is_authenticated %}
+          {% block nav_right%}
+          {% endblock nav_right%}
+          <form class="form-inline my-2 my-lg-0" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">
+              Log out of {{ user.first_name|default:user.username }}
+              </button>
+          </form>
+          {% else %}
+          <form class="form-inline my-2 my-lg-0" role="form" method='post'
+                  action="{% url 'login' %}">
+              {% csrf_token %}
+              <div class="form-group">
+              <input type="text" placeholder="Username" class="form-control" name="username">
+              </div>
+              <div class="form-group">
+              <input type="password" placeholder="Password" class="form-control" name="password">
+              </div>
+              <input type="hidden" name="next" value="{{ next }}" />
+              <button type="submit" class="btn btn-outlint-success">Sign in</button>
+          </form>
+        {% endif %}
+      </div>
+    </nav>
+    {% endblock navbar %}
+
+    <!-- Main body content -->
+    <div class="container">
+    {% if user.is_authenticated %}
+    {% block content %}{% endblock content %}
+    {% else %}
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+          <div class="container">
+          <h1>Hello, visitor!</h1>
+          {% if form.errors %}
+          <p>Your username and password didn't match. Please try again.</p>
+          {% else %}
+          <p>Please log in. Up there in the corner.</p>
+          {% endif %}
+         </div>
+      </div><!-- /div.jumbotron -->
+    <hr>
+
+    <footer>
+        <p>
+            ~&copy; Mac {% now "Y" %}.
+            <a target=_blank href="//en.wikipedia.org/wiki/Aaron_Swartz#Arrest_and_prosecution">I don't understand copyright.</a>.
+        </p>
+        </footer>
+
+    {% endif %}
+    </div><!-- /div.container (above row) -->
+
+{% endblock body %}
+
+{% block javascript %}
+  {{ block.super }}
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+          integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+          crossorigin="anonymous"></script>
+{% endblock javascript %}

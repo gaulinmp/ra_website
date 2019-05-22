@@ -1,0 +1,8 @@
+django >= 2
+django-registration-redux
+django-debug-toolbar
+
+# For excel and json file uploads
+pandas >= 0.20
+xlrd >= 1.0.0
+xlsxwriter >= 1.0.0

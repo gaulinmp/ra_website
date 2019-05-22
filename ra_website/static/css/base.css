@@ -1,0 +1,15 @@
+html {
+  background-color: #eee;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-color: #eee;
+  /*padding-top: 70px;*/
+  min-height: 100%;
+}
+
+.scroller {
+  overflow: auto;
+}

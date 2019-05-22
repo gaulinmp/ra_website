@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block title %}Permission Denied{% endblock title %}
+
+{% block content %}
+<p>{{message|default:"Sorry, you don't seem to have sufficient permissions to do that."}}</p>
+<p>If you believe you <b>should</b> be allowed to, contact <a href="mailto:web@example.com">Web Admin</a>.</p>
+{% endblock content %}

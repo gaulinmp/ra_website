@@ -1,0 +1,85 @@
+{% extends "bs_base.html" %}
+{% load staticfiles %}
+
+{% load hc_util %}
+
+
+{% block content %}
+  <table class='table table-condensed table-hover'>
+    <thead>
+      <th>ID</th>
+      <th>Text</th>
+      <th style="min-width:150px;">Notes</th>
+    </thead>
+    <tbody>
+      {% for blob in blobs|slice:":10" %}
+      <tr>
+        <td id='{{ blob.id }}' class='active clicktd'>{{ blob.id }}<br>
+          <span class="glyphicon glyphicon-save-file" aria-hidden='true'></span>
+        </td>
+        <td>{{ blob.text|safe }}<br><br>
+          <!-- <div class="">
+            <b><span id='ctype-{{ blob.id }}'>{{ blob.has_coc }}</span></b>
+            <input class="btn btn-default btn-xs has_coc" type="button"
+                   data-id="{{ blob.id }}" data-ct='A1' value="A1">
+            <span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
+          </div> -->
+        </td>
+        <td valign='bottom' style="vertical-align: bottom;">
+          <p class='note' id='note-{{ blob.id }}'>{{ blob.notes }}</p>
+          <input class="btn btn-default btn-xs chnote" type="button"
+                    data-id="{{ blob.id }}" value="Note">
+          <br>
+          <a href="{{ blob|get_sec_index }}" target=_blank>SEC</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}
+
+
+
+{% block javascript %}
+{{ block.super }}
+
+<script type="text/javascript">
+  // Add note button
+  $('.chnote').on( 'click', function () {
+    var row_id = $(this).attr('data-id');
+    var row_note = $('#note-'+row_id).html();
+    var note_text = window.prompt("Enter note text", row_note);
+    if(row_id > 0 & note_text != null){
+      $.ajax({
+        url: 'add_note?id='+row_id+'&note='+note_text,
+        type: 'get',
+        dataType: 'json',
+        success: function(content) {
+          if(content['success']){
+            var tmp = $('#note-'+content['id']);
+            if(tmp.length > 0){tmp.text(content['note']);}
+          }
+        }
+      })
+    }
+  } ); // End .chnote
+</script>
+
+<style media="screen">
+  #found {
+    font-size: large;
+    font-weight: bold;
+  }
+
+  .clicktd{
+    text-decoration: underline;
+    text-align: center;
+  }
+  .clicktd:hover{
+    color: blue;
+  }
+  .thsub{
+    font-weight: normal;
+  }
+</style>
+{% endblock javascript %}

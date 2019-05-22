@@ -1,0 +1,36 @@
+{% extends "bs_base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+    <!-- Upload form. Note enctype attribute! -->
+    <form action="#" method="post"
+          enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>{{ form.non_field_errors }}</p>
+    <p>Project Name:
+        {{ form.project_name }}
+        {% if form.project_name.errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ form.project_name.errors }}
+            </div>
+        {% endif %}
+    </p>
+    <p> Upload File Type:
+        {{ form.upload_type }}
+        {% if form.upload_type.errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ form.upload_type.errors }}
+            </div>
+        {% endif %}
+    </p>
+    <p> Upload File:
+        {{ form.upload_file }}
+        {% if form.upload_file.errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ form.upload_file.errors }}
+            </div>
+        {% endif %}
+    </p>
+    <p><input type="submit" value="Upload" /></p>
+    </form>
+{% endblock content %}
